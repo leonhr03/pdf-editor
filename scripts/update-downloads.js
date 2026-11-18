@@ -26,10 +26,16 @@ const entries = {
   linuxRpm: { label: 'Linux · Fedora/RHEL', name: `PDF-Editor-${version}-linux-x86_64.rpm` }
 };
 
+// Pflicht: macOS, Windows, AppImage. Optionale Pakete werden übersprungen, wenn sie fehlen.
+const optional = new Set(['linuxRpm']);
 const files = {};
 for (const [key, e] of Object.entries(entries)) {
   const file = path.join(dir, e.name);
   if (!fs.existsSync(file)) {
+    if (optional.has(key)) {
+      console.warn('Übersprungen (nicht gebaut): ' + e.name);
+      continue;
+    }
     console.error('Fehlt: ' + e.name);
     process.exit(1);
   }
