@@ -2,12 +2,12 @@ const { ipcRenderer } = require('electron');
 
 const pendingSaves = new Map();
 
-window.__saveDone = (id, ok, err) => {
+window.__saveDone = (id, ok, err, file) => {
   const cb = pendingSaves.get(id);
   if (!cb) return;
   pendingSaves.delete(id);
   if (ok) {
-    cb.resolve();
+    cb.resolve(file || '');
   } else {
     const error = new Error(err || 'cancelled');
     error.code = 'declined';
@@ -16,8 +16,6 @@ window.__saveDone = (id, ok, err) => {
 };
 
 window.claude = {
-  ai: (payload) => ipcRenderer.invoke('ai', payload || {}),
-  aiCancel: () => ipcRenderer.invoke('ai-cancel'),
   use: () => Promise.resolve({
     save(opts) {
       return new Promise((resolve, reject) => {
@@ -28,6 +26,7 @@ window.claude = {
           ipcRenderer.send('save', {
             id,
             filename: opts.filename || 'dokument.pdf',
+            mode: opts.mode || 'overwrite',
             b64: bytes.toString('base64'),
             tab: window.__activeTabId ? window.__activeTabId() : ''
           });

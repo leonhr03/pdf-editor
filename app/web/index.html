@@ -66,6 +66,16 @@ select{height:28px;padding:0 6px;cursor:pointer;max-width:150px;border-radius:7p
 select:hover{border-color:var(--bd2)}
 .ic{width:14px;height:14px;flex:none;display:block}
 .group{display:inline-flex;align-items:stretch}
+.savewrap{position:relative}
+.savewrap .group button.pri+button.pri{padding:0 6px;border-left-color:rgba(255,255,255,.35)}
+.savewrap .group button.pri:disabled+button.pri:disabled{border-left-color:var(--bd)}
+.savemenu{position:absolute;right:0;top:calc(100% + 6px);z-index:70;min-width:290px;padding:5px;background:var(--surf);border:1px solid var(--bd);border-radius:10px;box-shadow:var(--sh)}
+.savemenu[hidden]{display:none}
+.savemenu button{display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;column-gap:12px;row-gap:2px;align-items:center;justify-items:start;width:100%;height:auto;padding:7px 9px;border:0;border-radius:6px;background:transparent;box-shadow:none;text-align:left;white-space:normal}
+.savemenu button:hover,.savemenu button:focus-visible{background:var(--acTint);outline:none}
+.savemenu b{font-weight:600;font-size:12px}
+.savemenu span{grid-column:1;font-weight:400;font-size:10.5px;color:var(--mut)}
+.savemenu kbd{grid-column:2;grid-row:1/3;font:500 10.5px -apple-system,BlinkMacSystemFont,sans-serif;color:var(--mut)}
 .group button{border-radius:0;margin-left:-1px}
 .group button:first-child{border-radius:7px 0 0 7px;margin-left:0}
 .group button:last-child{border-radius:0 7px 7px 0}
@@ -177,40 +187,6 @@ body.hasdoc:not(.editing) #drop{min-height:calc(100vh - 131px)}
 .obj.tb:hover>.hd,.obj.tb:focus-within>.hd,.obj.tb.act>.hd{display:block}
 .obj:hover>.grip,.obj:hover>.xb,.obj:hover>.rz,.obj:focus-within>.grip,.obj:focus-within>.xb,.obj.act>.grip,.obj.act>.xb,.obj.act>.rz{display:block}
 
-#aiB.on{color:var(--ac);border-color:var(--acBdr);background:var(--acTint)}
-#aiPanel{position:fixed;z-index:60;top:46px;right:0;bottom:24px;width:min(390px,100vw);display:none;flex-direction:column;background:var(--chrome);border-left:1px solid var(--bd);box-shadow:-18px 0 50px -30px rgba(0,0,0,.55)}
-#aiPanel.open{display:flex}
-.aihead{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--bd);flex:none}
-.aihead strong{display:block;font-size:13px;letter-spacing:-.01em}
-.aihead span{display:block;margin-top:1px;font-size:10.5px;color:var(--mut)}
-#aiClose{margin-left:auto;width:28px;padding:0;font-size:18px;line-height:1;color:var(--mut)}
-.aibody{display:flex;flex-direction:column;flex:1;min-height:0;padding:12px 14px 14px;gap:9px}
-.aihint{margin:0;color:var(--mut);font-size:11px;line-height:1.45}
-.aihint.busy{color:var(--ac)}
-#aiHistory{flex:1;min-height:80px;overflow:auto;display:flex;flex-direction:column;gap:8px;padding:2px 0 4px}
-.aimsg{max-width:92%;padding:8px 10px;border-radius:9px;font-size:12px;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere}
-.aimsg.user{align-self:flex-end;background:var(--ac);color:#fff;border-bottom-right-radius:3px}
-.aimsg.ai{align-self:flex-start;background:var(--surf2);border:1px solid var(--bd);border-bottom-left-radius:3px}
-.aimsg.err{align-self:flex-start;background:rgba(217,58,63,.1);border:1px solid rgba(217,58,63,.35);color:var(--tx);border-bottom-left-radius:3px}
-.aimsg.think{align-self:flex-start;display:flex;align-items:center;gap:7px;background:var(--acTint);border:1px solid var(--acBdr);color:var(--ac);font-weight:500;border-bottom-left-radius:3px}
-.aimsg.think .dots{display:inline-flex;align-items:center;gap:3px}
-.aimsg.think .dots i{display:block;width:5px;height:5px;border-radius:50%;background:currentColor;animation:aiDot 1.05s ease-in-out infinite}
-@keyframes aiDot{0%,80%,100%{opacity:.25;transform:translateY(0)}40%{opacity:1;transform:translateY(-2px)}}
-@media (prefers-reduced-motion:reduce){.aimsg.think .dots i{animation:none;opacity:.75}}
-.aimsg small{display:block;margin-top:5px;color:var(--mut);font-size:10.5px}
-#aiPrompt{width:100%;min-height:74px;max-height:180px;resize:vertical;padding:8px 9px;border:1px solid var(--bd);border-radius:8px;background:var(--surf);color:var(--tx);font:12px/1.45 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;outline:none}
-#aiPrompt:focus{border-color:var(--acBdr);box-shadow:0 0 0 2px var(--acTint)}
-#aiPrompt:disabled{opacity:.55}
-.aiconsent{display:flex;align-items:flex-start;gap:7px;font-size:10.5px;line-height:1.4;color:var(--mut);cursor:pointer}
-.aiconsent input{margin:1px 0 0;accent-color:var(--ac)}
-.aiactions{display:flex;gap:6px;align-items:center}
-.aiactions button{height:30px}
-#aiRun{flex:1}
-#aiStop{width:74px}
-.aifoot{margin:0;color:var(--mut);font-size:10px;line-height:1.4}
-@media (max-width:700px){
-  #aiPanel{width:100%;bottom:24px}
-}
 ::-webkit-scrollbar{width:11px;height:11px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:rgba(120,120,128,.34);border:3px solid transparent;background-clip:content-box;border-radius:8px}
@@ -270,14 +246,20 @@ body.hasdoc:not(.editing) #drop{min-height:calc(100vh - 131px)}
       <span id="zpct" class="zoomval" aria-live="polite">100 %</span>
       <button id="zi" title="Vergrößern (⌘+)" aria-label="Vergrößern"><svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M8 3.5v9M3.5 8h9"/></svg></button>
     </div>
-    <button id="aiB" title="KI-Assistent (OpenCode)" aria-label="KI-Assistent" aria-expanded="false" aria-controls="aiPanel">
-      <svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.9l1.4 3.4L12.8 6.7l-3.4 1.4L8 11.5 6.6 8.1 3.2 6.7l3.4-1.4z"/><path d="M12.5 10.7l.5 1.2 1.2.5-1.2.5-.5 1.2-.5-1.2-1.2-.5 1.2-.5z"/></svg>
-      <span class="lb">KI</span>
-    </button>
-    <button id="saveB" class="pri" disabled title="Speichern (⌘S)">
+    <div class="savewrap">
+    <div class="group">
+    <button id="saveB" class="pri" disabled title="Speichern (⌘S) – überschreibt die geöffnete Datei">
       <svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2.4v7.6"/><path d="M5 7.1 8 10.1l3-3"/><path d="M3 12.8h10"/></svg>
       <span class="lb">Speichern</span>
     </button>
+    <button id="saveMore" class="pri" disabled title="Weitere Speicher-Optionen" aria-label="Weitere Speicher-Optionen" aria-haspopup="menu" aria-expanded="false" aria-controls="saveMenu"><svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4.5 6.5 3.5 3.5 3.5-3.5"/></svg></button>
+    </div>
+    <div id="saveMenu" class="savemenu" role="menu" hidden>
+      <button type="button" role="menuitem" data-save="overwrite"><b>Überschreiben</b><span>Änderungen in die geöffnete Datei schreiben</span><kbd>⌘S</kbd></button>
+      <button type="button" role="menuitem" data-save="new"><b>Als neue Datei</b><span>Kopie neben dem Original, z.&nbsp;B. „Name (2).pdf“</span></button>
+      <button type="button" role="menuitem" data-save="as"><b>Speichern unter …</b><span>Ort und Dateinamen selbst wählen</span><kbd>⇧⌘S</kbd></button>
+    </div>
+    </div>
   </div>
 </div>
 <div class="toolsbar">
@@ -318,20 +300,6 @@ body.hasdoc:not(.editing) #drop{min-height:calc(100vh - 131px)}
   <p class="hint">oder <span class="kbd">⌘O</span> drücken</p>
 </div>
 <div id="pages" class="t-sel"></div>
-<aside id="aiPanel" aria-hidden="true" aria-label="KI-Assistent">
-  <div class="aihead">
-    <div><strong>PDF-Assistent</strong><span>OpenCode · DeepSeek Free</span></div>
-    <button id="aiClose" title="Schließen" aria-label="KI-Assistent schließen">×</button>
-  </div>
-  <div class="aibody">
-    <p class="aihint" id="aiStatus">Beschreibe, was geändert werden soll. Der Assistent kann Formularfelder ausfüllen und Text auf Seiten schreiben.</p>
-    <div id="aiHistory" aria-live="polite"></div>
-    <textarea id="aiPrompt" placeholder="z. B. Fülle das Formular für Max Mustermann aus und setze das Datum auf heute." aria-label="Auftrag an den KI-Assistenten"></textarea>
-    <label class="aiconsent"><input type="checkbox" id="aiConsent"> PDF-Text und Formularfelder an die Cloud-KI senden. Ohne Häkchen wird nichts übertragen.</label>
-    <div class="aiactions"><button id="aiRun" class="pri">Ausführen</button><button id="aiStop" disabled>Stopp</button></div>
-    <p class="aifoot">Benötigt <b>OpenCode</b> ohne Konto. Ergebnisse bitte prüfen; gescannte PDFs werden nicht per OCR gelesen.</p>
-  </div>
-</aside>
 <div id="msg" role="status" aria-live="polite"></div>
 
 <script src="assets/pdf.min.js"></script>
@@ -339,7 +307,7 @@ body.hasdoc:not(.editing) #drop{min-height:calc(100vh - 131px)}
 <script>
 pdfjsLib.GlobalWorkerOptions.workerSrc="assets/pdf.worker.min.js";
 const $=id=>document.getElementById(id),NS="http://www.w3.org/2000/svg",FH=18;
-let S=1.4,src=[],pages=[],tool="sel",sel=null,hist=[],hi=-1,cache=new Map(),pend=null,io=null,dl=null,name="Unbenannt.pdf",aiBusy=false;
+let S=1.4,src=[],pages=[],tool="sel",sel=null,hist=[],hi=-1,cache=new Map(),pend=null,io=null,dl=null,name="Unbenannt.pdf";
 let tabs=[{id:"t0",name:"Unbenannt.pdf",src:[],pages:[],hist:[],hi:-1,S:1.4,sel:null,pend:null,scroll:0}],tabIx=0,tabSeq=0;
 const msg=t=>$("msg").textContent=t||"";
 const dd=p=>p.rot%180?[p.bh,p.bw]:[p.bw,p.bh];
@@ -404,7 +372,7 @@ async function openBytes(fileName,bytes,append){
   await addSource(bytes,fileName);
   if(!append)S=Math.min(1.8,(Math.min(innerWidth,1000)-24)/pages[0].bw);
   updZoom();
-  $("drop").style.display="none";$("saveB").disabled=false;
+  $("drop").style.display="none";$("saveB").disabled=$("saveMore").disabled=false;
   commit();build();
   const fldCount=pages.reduce((n,p)=>n+(p.fld?p.fld.length:0),0);
   msg(append?"PDF angehängt.":(fldCount?fldCount+" Formularfelder erkannt – Werte bleiben interaktiv.":"Tippe in ein blaues Feld – Kästchen lassen sich anklicken."));
@@ -517,7 +485,7 @@ function applyTab(t){
  name=t.name;src=t.src;pages=t.pages;hist=t.hist;hi=t.hi;S=t.S;sel=t.sel;pend=t.pend;
  cache.clear();if(io)io.disconnect();
  $("drop").style.display=pages.length?"none":"flex";
- $("saveB").disabled=!pages.length;
+ $("saveB").disabled=$("saveMore").disabled=!pages.length;
  syncProps();msg("");updZoom();upd();build();
  scrollTo(0,t.scroll||0);
 }
@@ -662,7 +630,7 @@ function rotate(p){
   else if(a.t==="rect"||a.t==="toggle"){const x=H-(a.y+a.h);a.y=a.x;a.x=x;[a.w,a.h]=[a.h,a.w]}
   else{const h=(a.t==="img"||a.t==="tbox")?a.h:FH,cx=H-(a.y+h/2),cy=a.x+a.w/2;a.x=cx-a.w/2;a.y=cy-h/2}
  });
- p.rot=(p.rot+90)%360;p.det=true;p._aiLayout=null;
+ p.rot=(p.rot+90)%360;p.det=true;
 }
 
 /* Linienerkennung */
@@ -956,7 +924,7 @@ document.addEventListener("keydown",e=>{
  const typing=/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName),mod=e.ctrlKey||e.metaKey;
   if(e.key==="Escape"){sel=null;markSel();setTool("sel")}
   if(e.ctrlKey&&e.key==="Tab"){e.preventDefault();switchTab((tabIx+(e.shiftKey?-1:1)+tabs.length)%tabs.length);return}
-  if(mod&&e.key.toLowerCase()==="s"){e.preventDefault();if(!$("saveB").disabled)$("saveB").click();return}
+  if(mod&&e.key.toLowerCase()==="s"){e.preventDefault();if(!$("saveB").disabled)savePDF(e.shiftKey?"as":"overwrite");return}
  if(mod&&e.key.toLowerCase()==="o"){e.preventDefault();pickPDF(false);return}
  if(mod&&e.key.toLowerCase()==="n"){e.preventDefault();newDocument(false);return}
  if(mod&&(e.key==="+"||e.key==="=")){e.preventDefault();zoom(1.2);return}
@@ -968,259 +936,6 @@ document.addEventListener("keydown",e=>{
  if(mod&&e.key.toLowerCase()==="y"){e.preventDefault();go(1)}
 });
 
-
-function aiCurrentPage(){
- let best=0,dist=Infinity,mid=innerHeight/2;
- document.querySelectorAll(".pg").forEach((g,i)=>{const r=g.getBoundingClientRect(),d=Math.abs((r.top+r.bottom)/2-mid);if(d<dist){dist=d;best=i}});
- return best;
-}
-async function aiPageLayout(p){
- if(p._aiLayout)return p._aiLayout;
- try{
-  const pg=await src[p.s].pdf.getPage(p.n),R=(p.inh+p.rot)%360,vp=pg.getViewport({scale:1,rotation:R}),tc=await pg.getTextContent(),items=[];
-  for(const it of tc.items){
-   const str=String(it.str||"");if(!str.trim())continue;
-   const m=pdfjsLib.Util.transform(vp.transform,it.transform),size=Math.max(1,Math.hypot(m[2],m[3])||it.height||10);
-   items.push({str,x:m[4],baseline:m[5],size});
-  }
-  items.sort((a,b)=>a.baseline-b.baseline||a.x-b.x);
-  const groups=[];
-  for(const it of items){
-   const g=groups[groups.length-1];
-   if(g&&Math.abs(it.baseline-g.baseline)<=Math.max(2,Math.min(g.size,it.size)*.45)){
-    const n=g.items.length;g.baseline=(g.baseline*n+it.baseline)/(n+1);g.items.push(it);g.size=Math.max(g.size,it.size);
-   }else groups.push({baseline:it.baseline,size:it.size,items:[it]});
-  }
-  const lines=[];
-  for(const g of groups){
-   g.items.sort((a,b)=>a.x-b.x);
-   const segs=[];let cur=[];
-   for(const it of g.items){
-    if(cur.length){
-     const prev=cur[cur.length-1];
-     mc.font=prev.size+"px Helvetica,Arial,sans-serif";
-     const gap=it.x-(prev.x+mc.measureText(prev.str).width);
-     if(gap>Math.max(18,g.size*2.2)){segs.push(cur);cur=[]}
-    }
-    cur.push(it);
-   }
-   if(cur.length)segs.push(cur);
-   for(const seg of segs){
-    const text=seg.map(i=>i.str).join(" ").replace(/\s+/g," ").trim();
-    if(!text)continue;
-    const x=Math.min(...seg.map(i=>i.x));
-    mc.font=g.size+"px Helvetica,Arial,sans-serif";
-    const w=Math.max(4,mc.measureText(text).width);
-    lines.push({text,x,top:g.baseline-g.size,baseline:g.baseline,w,h:g.size});
-   }
-  }
-  p._aiLayout=lines;return lines;
- }catch(e){p._aiLayout=[];return []}
-}
-async function buildAIContext(){
- const cur=aiCurrentPage(),fields=[],wanted=[],out=[];
- for(let pi=0;pi<pages.length;pi++)for(const f of (pages[pi].fld||[]))fields.push({name:f.name,type:f.type,page:pi+1,value:f.value,options:f.options||[],readOnly:!!f.readOnly,rect:[Math.round(f.x),Math.round(f.y),Math.round(f.w),Math.round(f.h)]});
- if(pages.length)wanted.push(cur);
- for(let i=0;i<pages.length&&i<16;i++)if(i!==cur)wanted.push(i);
- const share=Math.max(1400,Math.min(9000,Math.floor(26000/Math.max(1,wanted.length))));
- let budget=26000;
- for(const i of wanted){
-  if(budget<=0)break;
-  const p=pages[i],lines=await aiPageLayout(p),pageLines=[],limit=Math.min(share,budget);
-  let used=0;
-  for(let n=0;n<lines.length;n++){
-   const l=lines[n],t=l.text.length>320?l.text.slice(0,320)+"…":l.text,cost=t.length+56;
-   if(used+cost>limit)break;
-   pageLines.push({n:n+1,x:Math.round(l.x*10)/10,y:Math.round(l.top*10)/10,w:Math.round(l.w*10)/10,h:Math.round(l.h*10)/10,t});
-   used+=cost;
-  }
-  budget-=used;
-  out.push({page:i+1,width:Math.round(dd(p)[0]),height:Math.round(dd(p)[1]),lines:pageLines});
- }
- return {
-  document:{name,pageCount:pages.length,currentPage:cur+1},
-  fields,
-  pages:out.sort((a,b)=>a.page-b.page),
-  note:"pages[].lines beschreibt den gedruckten Text mit Koordinaten (Ursprung oben links, PDF-Punkte). n = Zeilennummer für add_text/add_check; x/y = linker/oberer Rand, w/h = Breite/Schrifthöhe. Aufgabenantworten über line an die passende Aufgabenzeile binden."
- };
-}
-function parseAIResponse(text){
- let raw=String(text||"").trim();
- const fence=raw.match(/```(?:json)?\s*([\s\S]*?)```/i);if(fence)raw=fence[1].trim();
- const a=raw.indexOf("{"),b=raw.lastIndexOf("}");
- if(a>=0&&b>a)raw=raw.slice(a,b+1);
- let obj=JSON.parse(raw);
- if(Array.isArray(obj))obj={actions:obj};
- if(!obj||typeof obj!=="object")throw new Error("Die KI-Antwort ist kein Objekt.");
- return {message:typeof obj.message==="string"?obj.message.trim():"",actions:Array.isArray(obj.actions)?obj.actions:[]};
-}
-function aiClamp(v,min,max){return Math.max(min,Math.min(max,v))}
-function aiMeasure(text,size){mc.font=size+"px Helvetica,Arial,sans-serif";return mc.measureText(text).width}
-function aiFitSize(text,size,maxWidth,min){
- const floor=Number.isFinite(min)?min:7;
- let s=aiClamp(size,floor,36);
- while(s>floor&&aiMeasure(text,s)>maxWidth)s=Math.max(floor,s-.5);
- return Math.round(s*10)/10;
-}
-function aiLineFor(layout,a){
- if(a.line!=null){const n=parseInt(a.line,10);if(n>=1&&n<=layout.length)return{n,line:layout[n-1]}}
- const after=String(a.after||"").trim().toLowerCase();
- if(after){const i=layout.findIndex(l=>l.text.toLowerCase().includes(after));if(i>=0)return{n:i+1,line:layout[i]}}
- return null;
-}
-function aiPlaceOnLine(p,line,text,sizeHint){
- const [W,H]=dd(p);
- let size=Number.isFinite(sizeHint)&&sizeHint>0?sizeHint:line.h;
- size=aiClamp(size,7,36);
- const right=line.x+line.w+Math.max(6,size*.45);
- let x,sizeF,below=false;
- if(W-right-20>=Math.max(30,aiMeasure(text,size))){x=right;sizeF=aiFitSize(text,size,W-x-20)}
- else{below=true;x=line.x;sizeF=aiFitSize(text,size,W-x-20)}
- const baseline=below?line.baseline+Math.max(line.h*1.8,sizeF*1.5):line.baseline;
- return{x:aiClamp(x,0,W-10),y:aiClamp(baseline-9-.3*sizeF,0,H-10),size:sizeF};
-}
-function aiCheckOnLine(p,line,sizeHint,match){
- const [W,H]=dd(p);
- const size=aiClamp(Number.isFinite(sizeHint)&&sizeHint>0?sizeHint:line.h*.95,8,40);
- const marks=[...line.text.matchAll(/[☐□◻▢]|\[\s*\]|\(\s*\)/g)];
- let mark=marks[0]||null;
- const m=String(match||"").trim().toLowerCase();
- if(m){
-  const mi=line.text.toLowerCase().indexOf(m);
-  if(mi>=0)mark=marks.filter(x=>x.index<=mi).pop()||mark;
- }
- let x=line.x-line.h*1.5;
- if(mark)x=line.x+aiMeasure(line.text.slice(0,mark.index),line.h);
- if(x<2)x=line.x+line.w+6;
- return{x:aiClamp(x,0,W-size),y:aiClamp(line.baseline-size*1.05,0,H-size),size};
-}
-async function applyAIActions(actions){
- const result={changed:false,applied:[],skipped:[]};
- for(const a of (actions||[]).slice(0,40)){
-  if(!a||typeof a!=="object"){result.skipped.push("Ungültige Aktion");continue}
-  if(a.type==="set_field"){
-   const name=String(a.name||"").trim();
-   if(!name){result.skipped.push("Feldname fehlt");continue}
-   const targets=[];
-   for(const p of pages)for(const f of (p.fld||[]))if(f.name===name)targets.push(f);
-   if(!targets.length){result.skipped.push("Feld „"+name+"“ nicht gefunden");continue}
-   const type=targets[0].type;
-   let value;
-   if(type==="check"){
-    value=typeof a.value==="boolean"?a.value:["true","ja","yes","1","on","x","✓"].includes(String(a.value||"").trim().toLowerCase());
-   }else{
-    value=a.value==null?"":String(a.value);
-   }
-   if((type==="select"||type==="radio")&&!targets.some(f=>(f.options||[]).includes(value))){
-    result.skipped.push("Wert „"+value+"“ ist für „"+name+"“ nicht erlaubt");continue;
-   }
-   let touched=false;
-   for(const f of targets){
-    if(f.readOnly)continue;
-    f.value=type==="text"&&f.maxLen?value.slice(0,f.maxLen):value;
-    touched=true;
-   }
-   if(touched){result.changed=true;result.applied.push("Feld „"+name+"“ gesetzt")}else result.skipped.push("Feld „"+name+"“ ist schreibgeschützt");
-  }else if(a.type==="add_text"){
-   const page=Math.max(1,Math.min(pages.length,parseInt(a.page,10)||aiCurrentPage()+1))-1,p=pages[page],[W,H]=dd(p);
-   const text=String(a.text||"").replace(/\s*\n\s*/g," ").trim().slice(0,800);
-   if(!text){result.skipped.push("Leerer Text");continue}
-   const layout=await aiPageLayout(p),target=aiLineFor(layout,a);
-   let x,y,size;
-   if(target){
-    const placed=aiPlaceOnLine(p,target.line,text,Number(a.size));
-    x=placed.x;y=placed.y;size=placed.size;
-   }else{
-    size=aiClamp(Number(a.size)||12,7,36);
-    x=Number(a.x);if(!Number.isFinite(x))x=40;x=aiClamp(x,0,W-10);
-    size=aiFitSize(text,size,W-x-20);
-    y=Number(a.y);if(!Number.isFinite(y))y=40;y=aiClamp(y,0,H-10);
-   }
-   const w=Math.max(30,Math.min(W-x,aiMeasure(text,size)+4));
-   p.ann.push({t:"text",x,y,w,s:size,c:"#111111",v:text,free:1});
-   result.changed=true;result.applied.push("Text auf Seite "+(page+1)+(target?" an Zeile "+target.n:"")+" eingefügt");
-  }else if(a.type==="add_check"){
-   const page=Math.max(1,Math.min(pages.length,parseInt(a.page,10)||aiCurrentPage()+1))-1,p=pages[page],[W,H]=dd(p);
-   const layout=await aiPageLayout(p),target=aiLineFor(layout,a);
-   let x,y,size;
-   if(target){
-    const placed=aiCheckOnLine(p,target.line,Number(a.size),a.match);
-    x=placed.x;y=placed.y;size=placed.size;
-   }else{
-    size=aiClamp(Number(a.size)||12,8,40);
-    x=Number(a.x);if(!Number.isFinite(x))x=40;y=Number(a.y);if(!Number.isFinite(y))y=40;
-    x=aiClamp(x,0,W-size);y=aiClamp(y,0,H-size);
-   }
-   p.ann.push({t:"toggle",x,y,w:size,h:size,on:true});
-   result.changed=true;result.applied.push("Haken auf Seite "+(page+1)+(target?" an Zeile "+target.n:"")+" gesetzt");
-  }else{
-   result.skipped.push("Unbekannte Aktion „"+String(a.type||"?")+"“");
-  }
- }
- return result;
-}
-function aiNote(kind,text,note){
- const box=$("aiHistory"),el=document.createElement("div");el.className="aimsg "+kind;
- const body=document.createElement("div");body.textContent=text;el.appendChild(body);
- if(note){const small=document.createElement("small");small.textContent=note;el.appendChild(small)}
- box.appendChild(el);box.scrollTop=box.scrollHeight;
-}
-function aiThinking(text){
- const box=$("aiHistory"),el=document.createElement("div");el.className="aimsg ai think";
- const label=document.createElement("span");label.textContent=text||"OpenCode denkt nach";
- const dots=document.createElement("span");dots.className="dots";
- for(let i=0;i<3;i++){const d=document.createElement("i");d.style.animationDelay=(i*.14)+"s";dots.appendChild(d)}
- el.append(label,dots);box.appendChild(el);box.scrollTop=box.scrollHeight;
- return{el,set(t){label.textContent=t}};
-}
-function setAIBusy(on){
- aiBusy=on;$("aiRun").disabled=on;$("aiStop").disabled=!on;$("aiPrompt").disabled=on;
- $("aiStatus").classList.toggle("busy",on);
- if(!on)$("aiStatus").textContent="Bereit. Beschreibe die gewünschte Änderung.";
-}
-function toggleAI(open){
- const panel=$("aiPanel"),on=open==null?!panel.classList.contains("open"):!!open;
- panel.classList.toggle("open",on);panel.setAttribute("aria-hidden",on?"false":"true");
- $("aiB").classList.toggle("on",on);$("aiB").setAttribute("aria-expanded",on?"true":"false");
- if(on){
-  if(!(window.claude&&claude.ai)){$("aiStatus").textContent="KI ist in dieser Ansicht nicht verfügbar. Nutze die Electron-Desktop-App mit installiertem OpenCode.";$("aiRun").disabled=true}
-  if(!$("aiHistory").children.length)aiNote("ai","Ich kann Formularfelder ausfüllen und Text auf die aktuelle Seite schreiben. Formuliere den Auftrag möglichst konkret.");
-  setTimeout(()=>$("aiPrompt").focus(),30);
- }
-}
-async function runAI(){
- if(aiBusy)return;
- const prompt=$("aiPrompt").value.trim();
- if(!prompt){$("aiStatus").textContent="Bitte zuerst einen Auftrag eingeben.";$("aiPrompt").focus();return}
- if(!$("aiConsent").checked){$("aiStatus").textContent="Bitte bestätige die Übertragung an die Cloud-KI.";msg("KI: Einwilligung erforderlich.");return}
- if(!(window.claude&&claude.ai)){$("aiStatus").textContent="KI ist in dieser Ansicht nicht verfügbar.";return}
- setAIBusy(true);$("aiStatus").textContent="PDF-Kontext wird vorbereitet …";aiNote("user",prompt);$("aiPrompt").value="";
- const think=aiThinking("PDF-Kontext wird vorbereitet");
- try{
-  const context=await buildAIContext();
-  think.set("OpenCode denkt nach");$("aiStatus").textContent="Antwort wird erstellt …";
-  const res=await claude.ai({prompt,context});
-  if(!res||!res.ok)throw new Error((res&&res.error)||"Die KI-Antwort ist fehlgeschlagen.");
-  let parsed;try{parsed=parseAIResponse(res.text)}catch(e){aiNote("err","Die KI hat kein gültiges JSON geliefert.",String(res.text||"").slice(0,500));$("aiStatus").textContent="Antwort konnte nicht angewendet werden.";return}
-  const result=await applyAIActions(parsed.actions),note=result.applied.length?result.applied.join(" · "):"";
-  if(result.changed){commit();pages.forEach((_,i)=>paint(i))}
-  const fallback=result.changed?note:(result.skipped.length?"Keine Änderung: "+result.skipped.join(" · "):"Keine Änderung nötig.");
-  aiNote("ai",parsed.message||fallback,parsed.message?note:"");
-  $("aiStatus").textContent=result.changed?"Änderungen angewendet. Bitte prüfen.":"Keine Änderungen angewendet.";
-  msg(result.changed?"KI: "+note:"KI: keine Änderung.");
- }catch(e){
-  const m=e&&e.code==="declined"?"Abgebrochen.":(e.message||String(e));
-  aiNote("err",m);$("aiStatus").textContent="Fehler: "+m;msg("KI: "+m);
- }finally{think.el.remove();setAIBusy(false)}
-}
-$("aiB").onclick=()=>toggleAI();
-$("aiClose").onclick=()=>toggleAI(false);
-$("aiRun").onclick=runAI;
-$("aiStop").onclick=async()=>{
- $("aiStatus").textContent="Wird abgebrochen …";
- try{if(window.claude&&claude.aiCancel)await claude.aiCancel()}catch(e){}
-};
-$("aiPrompt").addEventListener("keydown",e=>{if(e.key==="Enter"&&(e.metaKey||e.ctrlKey)){e.preventDefault();runAI()}});
 
 /* Speichern */
 /* Zeilenumbruch wie im Textfeld: an Leerzeichen, überlange Wörter zeichenweise */
@@ -1295,7 +1010,9 @@ function applyFormValues(form){
   }catch(e){}
  }
 }
-$("saveB").onclick=async()=>{
+async function savePDF(mode){
+ closeSaveMenu();
+ if(!pages.length)return;
  try{
   msg("Erzeuge PDF …");
   const {PDFDocument,rgb,StandardFonts}=PDFLib;
@@ -1324,10 +1041,28 @@ $("saveB").onclick=async()=>{
   if(!bytes)bytes=await flat();
   const fn=name;
   if(!dl){msg("Speichern ist in dieser Ansicht nicht verfügbar.");return}
-  await dl.save({filename:fn,data:bytes});
-  msg(keptFields?"Fertig – Formularfelder bleiben interaktiv.":(hasFields?"Gespeichert – Formularfelder gingen verloren, weil die Seitenstruktur geändert wurde.":"Fertig."));
+  const saved=await dl.save({filename:fn,data:bytes,mode});
+  const where=saved?"Gespeichert als „"+saved+"“":"Gespeichert";
+  if(saved&&saved!==name){name=saved;updateTabs();$("docname").textContent=name+" · "+pages.length+(pages.length===1?" Seite":" Seiten");document.title="PDF-Editor – "+name}
+  msg(where+(keptFields?" – Formularfelder bleiben interaktiv.":(hasFields?" – Formularfelder gingen verloren, weil die Seitenstruktur geändert wurde.":".")));
  }catch(e){msg(e&&e.code==="declined"?"Speichern abgebrochen.":"Fehler beim Speichern: "+(e.message||e))}
+}
+function closeSaveMenu(){$("saveMenu").hidden=true;$("saveMore").setAttribute("aria-expanded","false")}
+function toggleSaveMenu(){
+ const m=$("saveMenu"),open=m.hidden;
+ m.hidden=!open;$("saveMore").setAttribute("aria-expanded",String(open));
+ if(open)m.querySelector("button").focus();
+}
+$("saveB").onclick=()=>savePDF("overwrite");
+$("saveMore").onclick=e=>{e.stopPropagation();toggleSaveMenu()};
+$("saveMenu").onclick=e=>{const b=e.target.closest("[data-save]");if(b)savePDF(b.dataset.save)};
+$("saveMenu").onkeydown=e=>{
+ const items=[...$("saveMenu").querySelectorAll("button")],k=items.indexOf(document.activeElement);
+ if(e.key==="ArrowDown"){e.preventDefault();items[(k+1)%items.length].focus()}
+ else if(e.key==="ArrowUp"){e.preventDefault();items[(k-1+items.length)%items.length].focus()}
+ else if(e.key==="Escape"){e.stopPropagation();closeSaveMenu();$("saveMore").focus()}
 };
+document.addEventListener("pointerdown",e=>{if(!e.target.closest(".savewrap"))closeSaveMenu()});
 syncProps();updateTabs();
 </script>
 </body>

@@ -5,8 +5,6 @@ const {
 } = require('electron');
 const fs = require('fs');
 const fsp = fs.promises;
-const os = require('os');
-const { spawn } = require('child_process');
 const path = require('path');
 const { PNG } = require('pngjs');
 const UTIF = require('utif');
@@ -301,165 +299,36 @@ function quote(value) {
   return JSON.stringify(String(value || ''));
 }
 
+// Freien Dateinamen finden: „Name (2).pdf“, „Name (3).pdf“, …
+function uniquePath(file) {
+  const dir = path.dirname(file);
+  const ext = path.extname(file) || '.pdf';
+  const base = path.basename(file, path.extname(file)).replace(/ \(\d+\)$/, '');
+  for (let n = 2; n < 10000; n++) {
+    const candidate = path.join(dir, base + ' (' + n + ')' + ext);
+    if (!fs.existsSync(candidate)) return candidate;
+  }
+  return path.join(dir, base + ' (' + Date.now() + ')' + ext);
+}
+
 async function saveToFile(file, data) {
   await fsp.writeFile(file, data);
 }
 
 
-const AI_MODEL = process.env.PDF_EDITOR_AI_MODEL || 'opencode/deepseek-v4.1-flash-free';
-let aiProc = null;
-
-function findOpenCode() {
-  const exe = process.platform === 'win32' ? 'opencode.exe' : 'opencode';
-  const candidates = [
-    process.env.OPENCODE_BIN,
-    path.join(os.homedir(), '.npm-global', 'bin', exe),
-    path.join(os.homedir(), '.local', 'bin', exe),
-    '/opt/homebrew/bin/opencode',
-    '/usr/local/bin/opencode',
-    process.platform === 'win32' ? path.join(process.env.APPDATA || '', 'npm', exe) : '',
-    process.platform === 'win32' ? path.join(os.homedir(), 'AppData', 'Roaming', 'npm', exe) : ''
-  ].filter(Boolean);
-  for (const dir of String(process.env.PATH || '').split(path.delimiter)) {
-    if (dir) candidates.push(path.join(dir, exe));
-  }
-  for (const candidate of candidates) {
-    try { if (fs.statSync(candidate).isFile()) return candidate; } catch (_) {}
-  }
-  return null;
-}
-
-function aiInstructions(prompt, context) {
-  return [
-    'Du bist ein präziser PDF-Assistent. Bearbeite das Dokument ausschließlich über die erlaubten Aktionen.',
-    'Antworte NUR mit gültigem JSON, ohne Markdown und ohne Codezaun, in genau dieser Form:',
-    '{"message":"kurze deutsche Zusammenfassung","actions":[]}',
-    '',
-    'Erlaubte Aktionen:',
-    '{"type":"set_field","name":"Feldname","value":"neuer Wert"}',
-    '{"type":"add_text","page":1,"line":7,"text":"Antwort","size":12}',
-    '{"type":"add_text","page":1,"x":50,"y":100,"text":"Text","size":12}',
-    '{"type":"add_check","page":1,"line":7,"size":12}',
-    '',
-    'Regeln:',
-    '- Verwende bei set_field nur Feldnamen aus dem Kontext. Checkboxen erhalten true/false; Auswahl- und Radiowerte müssen in options vorkommen.',
-    '- context.pages[].lines enthält den gedruckten Text jeder Seite mit Koordinaten. Nutze für Aufgaben auf gedruckten Seiten add_text mit "line": <n> der passenden Aufgabenzeile. Die App setzt die Antwort dann direkt hinter oder unter diese Zeile und übernimmt automatisch die Schrifthöhe der Zeile.',
-    '- Schreibe als text nur die Lösung, niemals die Aufgabenstellung erneut. Bei Lücken wie "Name: ____" antworte direkt dahinter.',
-    '- Kästchenaufgaben: add_check mit "line": <n> der Zeile mit dem Kästchen. Die App platziert den Haken am Kästchen. Bei mehreren Kästchen in einer Zeile zusätzlich "match":"<Option>" angeben (z. B. "match":"Ja").',
-    '- Ohne "line" gelten x/y als PDF-Punkte mit Ursprung oben links. Größen werden automatisch an die Zeilenhöhe und den verfügbaren Platz angepasst; setze "size" nur, wenn der Nutzer es ausdrücklich verlangt.',
-    '- Löse nur Aufgaben, deren Antwort sich sicher aus dem Dokument oder Auftrag ergibt. Erfinde keine Inhalte; lasse unsichere Aufgaben aus und erwähne sie in message.',
-    '- add_text und add_check beziehen sich auf die angegebene Ausgabeseite.',
-    '- Wenn etwas unklar ist, ändere nichts und erkläre es kurz in message.',
-    '- Antworte auf Deutsch. Keine Rückfragen, keine Tool-Nutzung.',
-    '',
-    'Nutzerauftrag:',
-    String(prompt),
-    '',
-    'Kontext:',
-    JSON.stringify(context || {}, null, 2)
-  ].join('\n');
-}
-
-async function runOpenCode(prompt, context) {
-  const bin = findOpenCode();
-  if (!bin) {
-    return { ok: false, error: 'OpenCode wurde nicht gefunden. Installiere es mit „npm i -g opencode-ai“ oder setze OPENCODE_BIN.' };
-  }
-  let dir = '';
-  try {
-    dir = fs.mkdtempSync(path.join(os.tmpdir(), 'pdf-editor-ai-'));
-    const file = path.join(dir, 'auftrag.md');
-    fs.writeFileSync(file, aiInstructions(prompt, context), 'utf8');
-    const args = [
-      'run', '--format', 'json', '--model', AI_MODEL, '--pure',
-      'Bearbeite die angehängte Aufgabe. Antworte ausschließlich mit dem geforderten JSON.',
-      '-f', file
-    ];
-    return await new Promise((resolve) => {
-      let settled = false, stdout = '', stderr = '', timer = null;
-      const finish = (result) => {
-        if (settled) return;
-        settled = true;
-        if (timer) clearTimeout(timer);
-        aiProc = null;
-        resolve(result);
-      };
-      let child;
-      try {
-        child = spawn(bin, args, {
-          cwd: dir,
-          env: { ...process.env, OPENCODE_DISABLE_AUTOUPDATE: '1', NO_COLOR: '1', XDG_DATA_HOME: path.join(dir, 'data'), XDG_CACHE_HOME: path.join(dir, 'cache'), XDG_CONFIG_HOME: path.join(dir, 'config') },
-          stdio: ['ignore', 'pipe', 'pipe'],
-          windowsHide: true
-        });
-      } catch (error) {
-        finish({ ok: false, error: 'OpenCode konnte nicht gestartet werden: ' + error.message });
-        return;
-      }
-      aiProc = child;
-      child.stdout.on('data', (chunk) => {
-        stdout += chunk.toString('utf8');
-        if (stdout.length > 4 * 1024 * 1024) {
-          try { child.kill('SIGKILL'); } catch (_) {}
-        }
-      });
-      child.stderr.on('data', (chunk) => {
-        stderr += chunk.toString('utf8');
-        if (stderr.length > 12000) stderr = stderr.slice(-12000);
-      });
-      child.on('error', (error) => {
-        finish({ ok: false, error: 'OpenCode konnte nicht gestartet werden: ' + error.message });
-      });
-      child.on('close', (code, signal) => {
-        const text = stdout.split(/\r?\n/).map((line) => {
-          const raw = line.trim();
-          if (!raw || raw[0] !== '{') return '';
-          try {
-            const event = JSON.parse(raw);
-            return event && event.type === 'text' && event.part && typeof event.part.text === 'string' ? event.part.text : '';
-          } catch (_) { return ''; }
-        }).join('');
-        if (text.trim()) finish({ ok: true, text });
-        else if (signal === 'SIGTERM' || signal === 'SIGKILL') finish({ ok: false, error: 'Abgebrochen.' });
-        else {
-          const detail = stderr.trim().split(/\r?\n/).slice(-4).join(' ');
-          finish({ ok: false, error: 'OpenCode lieferte keine Antwort' + (detail ? ': ' + detail : '.') });
-        }
-      });
-      timer = setTimeout(() => {
-        try { child.kill('SIGKILL'); } catch (_) {}
-        finish({ ok: false, error: 'Die KI-Antwort hat zu lange gedauert.' });
-      }, 150000);
-    });
-  } finally {
-    if (dir) { try { fs.rmSync(dir, { recursive: true, force: true }); } catch (_) {} }
-  }
-}
-
 function registerIpc() {
-
-  ipcMain.handle('ai', async (_event, body) => {
-    if (aiProc) return { ok: false, error: 'Es läuft bereits eine KI-Anfrage.' };
-    const prompt = String(body && body.prompt || '').trim().slice(0, 20000);
-    if (!prompt) return { ok: false, error: 'Der Auftrag ist leer.' };
-    return runOpenCode(prompt, body && body.context ? body.context : {});
-  });
-
-  ipcMain.handle('ai-cancel', () => {
-    if (!aiProc) return { ok: false };
-    try { aiProc.kill('SIGTERM'); } catch (_) {}
-    return { ok: true };
-  });
 
   ipcMain.on('save', async (_event, body) => {
     if (!body || typeof body !== 'object') return;
     const id = body.id;
     const tab = body.tab || '';
     const filename = body.filename || 'Unbenannt.pdf';
+    // overwrite = in die geöffnete Datei, new = Kopie daneben, as = Dialog
+    const mode = ['overwrite', 'new', 'as'].includes(body.mode) ? body.mode : 'overwrite';
     if (!id) return;
 
-    const reply = (ok, error) => {
-      runJS('window.__saveDone(' + quote(id) + ',' + (ok ? 'true' : 'false') + ',' + quote(error) + ')');
+    const reply = (ok, error, file) => {
+      runJS('window.__saveDone(' + quote(id) + ',' + (ok ? 'true' : 'false') + ',' + quote(error) + ',' + quote(file ? path.basename(file) : '') + ')');
     };
 
     let data;
@@ -470,12 +339,26 @@ function registerIpc() {
       return;
     }
 
-    if (tab && tabURLs.has(tab)) {
-      const file = tabURLs.get(tab);
+    const current = tab && tabURLs.has(tab) ? tabURLs.get(tab) : '';
+
+    if (mode === 'overwrite' && current) {
+      try {
+        await saveToFile(current, data);
+        updateLastDirFrom(current);
+        reply(true, '', current);
+      } catch (error) {
+        reply(false, error.message);
+      }
+      return;
+    }
+
+    if (mode === 'new') {
+      const file = current ? uniquePath(current) : (fs.existsSync(defaultSavePath(filename)) ? uniquePath(defaultSavePath(filename)) : defaultSavePath(filename));
       try {
         await saveToFile(file, data);
+        if (tab) tabURLs.set(tab, file);
         updateLastDirFrom(file);
-        reply(true, '');
+        reply(true, '', file);
       } catch (error) {
         reply(false, error.message);
       }
@@ -490,8 +373,8 @@ function registerIpc() {
     let result;
     try {
       result = await dialog.showSaveDialog(win, {
-        title: 'PDF speichern',
-        defaultPath: defaultSavePath(filename),
+        title: mode === 'as' ? 'PDF speichern unter' : 'PDF speichern',
+        defaultPath: current || defaultSavePath(filename),
         buttonLabel: 'Speichern',
         filters: [{ name: 'PDF-Dokument', extensions: ['pdf'] }],
         properties: ['createDirectory', 'showOverwriteConfirmation']
@@ -513,7 +396,7 @@ function registerIpc() {
       await saveToFile(file, data);
       if (tab) tabURLs.set(tab, file);
       updateLastDirFrom(file);
-      reply(true, '');
+      reply(true, '', file);
     } catch (error) {
       reply(false, error.message);
     }
@@ -598,7 +481,7 @@ function aboutDialog() {
     type: 'info',
     title: 'Über PDF-Editor',
     message: 'PDF-Editor',
-    detail: 'Version ' + app.getVersion() + '\nPDFs ausfüllen, unterschreiben, markieren und verwalten.\nOptionaler KI-Assistent über OpenCode.'
+    detail: 'Version ' + app.getVersion() + '\nPDFs ausfüllen, unterschreiben, markieren und verwalten.'
   });
 }
 
@@ -631,7 +514,9 @@ function buildMenu() {
       { label: 'Bild zu PDF …', click: () => chooseFiles({ append: false, images: true }) },
       { type: 'separator' },
       { label: 'Neuer Tab', accelerator: 'CmdOrCtrl+T', click: docAction('newTab()') },
-      { label: 'Speichern', accelerator: 'CmdOrCtrl+S', click: docAction("document.getElementById('saveB').click()") },
+      { label: 'Speichern (überschreiben)', accelerator: 'CmdOrCtrl+S', click: docAction("savePDF('overwrite')") },
+      { label: 'Als neue Datei speichern', accelerator: 'CmdOrCtrl+Alt+S', click: docAction("savePDF('new')") },
+      { label: 'Speichern unter …', accelerator: 'CmdOrCtrl+Shift+S', click: docAction("savePDF('as')") },
       { type: 'separator' },
       { label: 'Tab schließen', accelerator: 'CmdOrCtrl+W', click: docAction('closeActiveTab()') },
       { label: 'Fenster schließen', accelerator: 'CmdOrCtrl+Shift+W', click: () => { if (win) win.close(); } },
@@ -646,8 +531,6 @@ function buildMenu() {
       { label: 'Kopieren', role: 'copy' },
       { label: 'Einsetzen', role: 'paste' },
       { label: 'Alles auswählen', role: 'selectAll' },
-      { type: 'separator' },
-      { label: 'KI-Assistent', accelerator: 'CmdOrCtrl+Shift+K', click: docAction('toggleAI()') }
     ]
   });
 
@@ -753,6 +636,5 @@ if (!gotLock) {
 
   app.on('before-quit', () => {
     quitting = true;
-    if (aiProc) { try { aiProc.kill('SIGTERM'); } catch (_) {} }
   });
 }
