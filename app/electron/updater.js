@@ -31,7 +31,12 @@ function isNewer(remote, local) {
 function platformKey() {
   if (process.platform === 'darwin') return process.arch === 'arm64' ? 'macArm' : 'macIntel';
   if (process.platform === 'win32') return 'win';
-  if (process.platform === 'linux') return process.env.APPIMAGE ? 'linuxAppImage' : 'linuxDeb';
+  if (process.platform === 'linux') {
+    if (process.env.APPIMAGE) return 'linuxAppImage';
+    // Fedora/RHEL/openSUSE nutzen rpm, Debian/Ubuntu dpkg
+    const hasRpm = fs.existsSync('/usr/bin/rpm') && !fs.existsSync('/usr/bin/dpkg');
+    return hasRpm ? 'linuxRpm' : 'linuxDeb';
+  }
   return '';
 }
 

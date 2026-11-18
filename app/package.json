@@ -49,19 +49,46 @@
       {
         "ext": "pdf",
         "name": "PDF-Dokument",
-        "role": "Editor"
+        "role": "Editor",
+        "mimeType": "application/pdf"
       },
       {
-        "ext": [
-          "png",
-          "jpg",
-          "jpeg",
-          "gif",
-          "bmp",
-          "tif",
-          "tiff",
-          "webp"
-        ],
+        "ext": "png",
+        "name": "Bild",
+        "role": "Viewer"
+      },
+      {
+        "ext": "jpg",
+        "name": "Bild",
+        "role": "Viewer"
+      },
+      {
+        "ext": "jpeg",
+        "name": "Bild",
+        "role": "Viewer"
+      },
+      {
+        "ext": "gif",
+        "name": "Bild",
+        "role": "Viewer"
+      },
+      {
+        "ext": "bmp",
+        "name": "Bild",
+        "role": "Viewer"
+      },
+      {
+        "ext": "tif",
+        "name": "Bild",
+        "role": "Viewer"
+      },
+      {
+        "ext": "tiff",
+        "name": "Bild",
+        "role": "Viewer"
+      },
+      {
+        "ext": "webp",
         "name": "Bild",
         "role": "Viewer"
       }
@@ -108,10 +135,23 @@
           "arch": [
             "x64"
           ]
+        },
+        {
+          "target": "rpm",
+          "arch": [
+            "x64"
+          ]
         }
-      ]
+      ],
+      "maintainer": "Leon <leonhuber2010@gmail.com>",
+      "synopsis": "PDFs ausfüllen, unterschreiben und markieren"
     },
-    "afterPack": "build/afterPack.js"
+    "afterPack": "build/afterPack.js",
+    "rpm": {
+      "fpm": [
+        "--rpm-rpmbuild-define=_build_id_links none"
+      ]
+    }
   },
   "allowScripts": {
     "electron-winstaller@5.4.0": true

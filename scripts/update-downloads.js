@@ -22,7 +22,8 @@ const entries = {
   macIntel: { label: 'macOS · Intel', name: `PDF-Editor-${version}-mac-x64.dmg` },
   win: { label: 'Windows · 64 Bit', name: `PDF-Editor-${version}-win-x64.exe` },
   linuxAppImage: { label: 'Linux · AppImage', name: `PDF-Editor-${version}-linux-x86_64.AppImage` },
-  linuxDeb: { label: 'Linux · Debian/Ubuntu', name: `PDF-Editor-${version}-linux-amd64.deb` }
+  linuxDeb: { label: 'Linux · Debian/Ubuntu', name: `PDF-Editor-${version}-linux-amd64.deb` },
+  linuxRpm: { label: 'Linux · Fedora/RHEL', name: `PDF-Editor-${version}-linux-x86_64.rpm` }
 };
 
 const files = {};
