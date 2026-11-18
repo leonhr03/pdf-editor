@@ -1,35 +1,47 @@
 {
-  "version": "1.0.0",
+  "version": "1.0.1",
   "files": {
     "macArm": {
       "label": "macOS · Apple Silicon",
-      "file": "downloads/PDF-Editor-1.0.0-mac-arm64.dmg",
-      "size": 124386387,
-      "url": "https://github.com/leonhr03/pdf-editor/releases/download/v1.0.0/PDF-Editor-1.0.0-mac-arm64.dmg"
+      "file": "downloads/PDF-Editor-1.0.1-mac-arm64.dmg",
+      "size": 124082317,
+      "sha256": "3ebf85003a0eac6d73e1acf33a1691eb7af110d0e11a76354eaca8915f907d30",
+      "url": "https://github.com/leonhr03/pdf-editor/releases/download/v1.0.1/PDF-Editor-1.0.1-mac-arm64.dmg"
     },
     "macIntel": {
       "label": "macOS · Intel",
-      "file": "downloads/PDF-Editor-1.0.0-mac-x64.dmg",
-      "size": 131616012,
-      "url": "https://github.com/leonhr03/pdf-editor/releases/download/v1.0.0/PDF-Editor-1.0.0-mac-x64.dmg"
+      "file": "downloads/PDF-Editor-1.0.1-mac-x64.dmg",
+      "size": 131069000,
+      "sha256": "d9d0c7e43a831c7a58f255a4cbdee92c70e1028b12c168079f21c76a62864e9e",
+      "url": "https://github.com/leonhr03/pdf-editor/releases/download/v1.0.1/PDF-Editor-1.0.1-mac-x64.dmg"
     },
     "win": {
       "label": "Windows · 64 Bit",
-      "file": "downloads/PDF-Editor-1.0.0-win-x64.exe",
-      "size": 124446006,
-      "url": "https://github.com/leonhr03/pdf-editor/releases/download/v1.0.0/PDF-Editor-1.0.0-win-x64.exe"
+      "file": "downloads/PDF-Editor-1.0.1-win-x64.exe",
+      "size": 118347033,
+      "sha256": "d377b79572d85b38d7a192dfbecf23454c1e30b4fbeb9a506ad87a674e6165fb",
+      "url": "https://github.com/leonhr03/pdf-editor/releases/download/v1.0.1/PDF-Editor-1.0.1-win-x64.exe"
     },
     "linuxAppImage": {
       "label": "Linux · AppImage",
-      "file": "downloads/PDF-Editor-1.0.0-linux-x86_64.AppImage",
-      "size": 130409037,
-      "url": "https://github.com/leonhr03/pdf-editor/releases/download/v1.0.0/PDF-Editor-1.0.0-linux-x86_64.AppImage"
+      "file": "downloads/PDF-Editor-1.0.1-linux-x86_64.AppImage",
+      "size": 130463992,
+      "sha256": "1e79e1114317581013790ecdc2b53edf5e4a28c0a0410e0d6c4634ff4494e1d6",
+      "url": "https://github.com/leonhr03/pdf-editor/releases/download/v1.0.1/PDF-Editor-1.0.1-linux-x86_64.AppImage"
     },
     "linuxDeb": {
       "label": "Linux · Debian/Ubuntu",
-      "file": "downloads/PDF-Editor-1.0.0-linux-amd64.deb",
-      "size": 104988100,
-      "url": "https://github.com/leonhr03/pdf-editor/releases/download/v1.0.0/PDF-Editor-1.0.0-linux-amd64.deb"
+      "file": "downloads/PDF-Editor-1.0.1-linux-amd64.deb",
+      "size": 104951716,
+      "sha256": "0c09193113eed016ecbfb6c3b2889ea2690b346b045e8ad8f212ecf8c6368154",
+      "url": "https://github.com/leonhr03/pdf-editor/releases/download/v1.0.1/PDF-Editor-1.0.1-linux-amd64.deb"
+    },
+    "linuxRpm": {
+      "label": "Linux · Fedora/RHEL",
+      "file": "downloads/PDF-Editor-1.0.1-linux-x86_64.rpm",
+      "size": 92624318,
+      "sha256": "1b97bb6fa8afb5b609c19d337f6107fca3cf827829ef764da327cc6b8b75bef4",
+      "url": "https://github.com/leonhr03/pdf-editor/releases/download/v1.0.1/PDF-Editor-1.0.1-linux-x86_64.rpm"
     }
   }
 }
