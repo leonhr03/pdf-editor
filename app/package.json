@@ -1,0 +1,119 @@
+{
+  "name": "pdf-editor-desktop",
+  "productName": "PDF-Editor",
+  "version": "1.0.0",
+  "description": "PDFs ausfüllen, unterschreiben, markieren und verwalten – für macOS, Windows und Linux.",
+  "main": "electron/main.js",
+  "author": {
+    "name": "Leon",
+    "email": "leonhuber2010@gmail.com"
+  },
+  "license": "UNLICENSED",
+  "private": true,
+  "homepage": "https://github.com/Leonhr03/pdf-editor",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Leonhr03/pdf-editor.git"
+  },
+  "desktopName": "PDF-Editor",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --publish never",
+    "dist:mac": "electron-builder --mac --publish never",
+    "dist:win": "electron-builder --win --publish never",
+    "dist:linux": "electron-builder --linux --publish never"
+  },
+  "dependencies": {
+    "heic-decode": "^2.1.0",
+    "pngjs": "^7.0.0",
+    "utif": "^3.1.0"
+  },
+  "devDependencies": {
+    "electron": "45.3.4",
+    "electron-builder": "26.0.12"
+  },
+  "build": {
+    "appId": "de.leon.pdfeditor",
+    "productName": "PDF-Editor",
+    "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
+    "directories": {
+      "buildResources": "build",
+      "output": "dist"
+    },
+    "files": [
+      "electron/**",
+      "web/**",
+      "package.json"
+    ],
+    "fileAssociations": [
+      {
+        "ext": "pdf",
+        "name": "PDF-Dokument",
+        "role": "Editor"
+      },
+      {
+        "ext": [
+          "png",
+          "jpg",
+          "jpeg",
+          "gif",
+          "bmp",
+          "tif",
+          "tiff",
+          "webp"
+        ],
+        "name": "Bild",
+        "role": "Viewer"
+      }
+    ],
+    "mac": {
+      "category": "public.app-category.productivity",
+      "identity": null,
+      "minimumSystemVersion": "13.0",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
+        }
+      ]
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "linux": {
+      "category": "Office",
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "deb",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "afterPack": "build/afterPack.js"
+  },
+  "allowScripts": {
+    "electron-winstaller@5.4.0": true
+  }
+}

@@ -1,0 +1,117 @@
+# Baut bei jedem Push auf main, der die App ändert, neue Installer,
+# veröffentlicht sie als GitHub-Release und setzt die Download-Links der Website.
+name: Release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'app/**'
+      - '.github/workflows/release.yml'
+      - 'scripts/update-downloads.js'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - id: v
+        name: Nächste Version bestimmen
+        run: |
+          node -e '
+            const cp = require("child_process");
+            const parse = s => s.replace(/^v/, "").split(".").map(Number);
+            const cmp = (a, b) => a[0]-b[0] || a[1]-b[1] || a[2]-b[2];
+            const base = parse(require("./app/package.json").version);
+            const tags = cp.execSync("git tag --list \"v*\"").toString().split("\n")
+              .filter(t => /^v\d+\.\d+\.\d+$/.test(t)).map(parse).sort(cmp);
+            const last = tags[tags.length - 1];
+            let next = base;
+            if (last && cmp(base, last) <= 0) next = [last[0], last[1], last[2] + 1];
+            console.log("version=" + next.join("."));
+          ' >> "$GITHUB_OUTPUT"
+          cat "$GITHUB_OUTPUT"
+
+  build:
+    needs: version
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - os: macos-latest
+            target: --mac
+          - os: windows-latest
+            target: --win
+          - os: ubuntu-latest
+            target: --linux
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - run: npm ci
+      - run: npm version ${{ needs.version.outputs.version }} --no-git-tag-version --allow-same-version
+      - run: npx electron-builder ${{ matrix.target }} --publish never
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist-${{ matrix.os }}
+          if-no-files-found: error
+          path: |
+            app/dist/*.dmg
+            app/dist/*.exe
+            app/dist/*.AppImage
+            app/dist/*.deb
+
+  release:
+    needs: [version, build]
+    runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ needs.version.outputs.version }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: release
+          merge-multiple: true
+      - run: ls -la release
+      - name: GitHub-Release erstellen
+        run: |
+          gh release create "v$VERSION" release/* \
+            --title "PDF-Editor $VERSION" \
+            --notes "Automatischer Build von ${GITHUB_SHA::7}." \
+            --target "$GITHUB_SHA"
+      - name: Download-Links der Website aktualisieren
+        run: node scripts/update-downloads.js "$VERSION" release
+      - name: Änderungen committen
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add downloads.json index.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Downloads auf v$VERSION aktualisieren [skip ci]"
+          for i in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            sleep 5
+          done
+          exit 1
