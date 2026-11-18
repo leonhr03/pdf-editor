@@ -39,6 +39,22 @@ window.claude = {
   })
 };
 
+// Einstellungen und Updates
+const updateListeners = new Set();
+ipcRenderer.on('update-status', (_event, state) => {
+  updateListeners.forEach((fn) => { try { fn(state); } catch (_) {} });
+});
+window.pdfApp = {
+  platform: process.platform,
+  getSettings: () => ipcRenderer.invoke('settings-get'),
+  setSettings: (patch) => ipcRenderer.invoke('settings-set', patch || {}),
+  checkUpdate: () => ipcRenderer.invoke('update-check'),
+  downloadUpdate: () => ipcRenderer.invoke('update-download'),
+  installUpdate: () => ipcRenderer.invoke('update-install'),
+  openWebsite: () => ipcRenderer.invoke('open-website'),
+  onUpdate: (fn) => { updateListeners.add(fn); return () => updateListeners.delete(fn); }
+};
+
 const post = (channel) => (payload) => ipcRenderer.send(channel, payload);
 
 window.webkit = {

@@ -9,6 +9,7 @@ const path = require('path');
 const { PNG } = require('pngjs');
 const UTIF = require('utif');
 const heicDecode = require('heic-decode');
+const { Updater, WEBSITE } = require('./updater');
 
 const APP_NAME = 'PDF-Editor';
 const SCHEME = 'pdfedit';
@@ -56,21 +57,53 @@ function settingsFile() {
   return path.join(app.getPath('userData'), 'settings.json');
 }
 
+// Einstellungen, die der Nutzer im Einstellungsfenster ändern kann
+const DEFAULTS = {
+  theme: 'system',          // system | light | dark
+  autoUpdate: true,         // beim Start nach Updates suchen
+  saveShortcut: 'overwrite',// ⌘S: overwrite | as
+  fontSize: 11,             // Standard-Schriftgröße für Text und Textfelder
+  textColor: '#111111'      // Standard-Textfarbe
+};
+let settings = { ...DEFAULTS };
+
+function cleanSettings(input) {
+  const out = {};
+  if (!input || typeof input !== 'object') return out;
+  if (['system', 'light', 'dark'].includes(input.theme)) out.theme = input.theme;
+  if (typeof input.autoUpdate === 'boolean') out.autoUpdate = input.autoUpdate;
+  if (['overwrite', 'as'].includes(input.saveShortcut)) out.saveShortcut = input.saveShortcut;
+  const size = Number(input.fontSize);
+  if (Number.isFinite(size) && size >= 6 && size <= 48) out.fontSize = size;
+  if (typeof input.textColor === 'string' && /^#[0-9a-f]{6}$/i.test(input.textColor)) out.textColor = input.textColor;
+  return out;
+}
+
+function writeSettings() {
+  try {
+    fs.mkdirSync(app.getPath('userData'), { recursive: true });
+    fs.writeFileSync(settingsFile(), JSON.stringify({ ...settings, lastDirectory: lastDir }, null, 2));
+  } catch (_) {}
+}
+
 function loadSettings() {
   try {
     const data = JSON.parse(fs.readFileSync(settingsFile(), 'utf8'));
     if (data && typeof data.lastDirectory === 'string') lastDir = data.lastDirectory;
+    settings = { ...DEFAULTS, ...cleanSettings(data) };
   } catch (_) {}
+  nativeTheme.themeSource = settings.theme;
 }
 
 function rememberDirectory(dir) {
   if (!dir || dir === lastDir) return;
   lastDir = dir;
-  try {
-    fs.mkdirSync(app.getPath('userData'), { recursive: true });
-    fs.writeFileSync(settingsFile(), JSON.stringify({ lastDirectory: lastDir }, null, 2));
-  } catch (_) {}
+  writeSettings();
 }
+
+const updater = new Updater((state) => {
+  if (win && !win.isDestroyed()) win.webContents.send('update-status', state);
+});
 
 function fileIcon() {
   try { return nativeImage.createFromBuffer(fs.readFileSync(ICON_PATH)); }
@@ -96,14 +129,16 @@ function showWindow() {
 
 function createWindow() {
   const dark = nativeTheme.shouldUseDarkColors;
+  const isMac = process.platform === 'darwin';
   win = new BrowserWindow({
-    width: 1024,
-    height: 820,
-    minWidth: 680,
-    minHeight: 500,
+    width: 1180,
+    height: 860,
+    minWidth: 760,
+    minHeight: 520,
     title: APP_NAME,
+    ...(isMac ? { titleBarStyle: 'hiddenInset', trafficLightPosition: { x: 16, y: 18 } } : {}),
     icon: process.platform === 'darwin' ? undefined : ICON_PATH,
-    backgroundColor: dark ? '#1c1c1e' : '#f2f2f4',
+    backgroundColor: dark ? '#1b1b1d' : '#ececef',
     show: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -318,6 +353,26 @@ async function saveToFile(file, data) {
 
 function registerIpc() {
 
+  ipcMain.handle('settings-get', () => ({
+    ...settings,
+    version: app.getVersion(),
+    platform: process.platform,
+    website: WEBSITE,
+    update: updater.state
+  }));
+
+  ipcMain.handle('settings-set', (_event, patch) => {
+    settings = { ...settings, ...cleanSettings(patch) };
+    nativeTheme.themeSource = settings.theme;
+    writeSettings();
+    return settings;
+  });
+
+  ipcMain.handle('update-check', () => updater.check());
+  ipcMain.handle('update-download', () => updater.download());
+  ipcMain.handle('update-install', () => updater.install());
+  ipcMain.handle('open-website', () => shell.openExternal(WEBSITE));
+
   ipcMain.on('save', async (_event, body) => {
     if (!body || typeof body !== 'object') return;
     const id = body.id;
@@ -494,6 +549,9 @@ function buildMenu() {
       label: APP_NAME,
       submenu: [
         { label: 'Über PDF-Editor', role: 'about' },
+        { label: 'Nach Updates suchen …', click: docAction("openSettings('updates',true)") },
+        { type: 'separator' },
+        { label: 'Einstellungen …', accelerator: 'Cmd+,', click: docAction('openSettings()') },
         { type: 'separator' },
         { label: 'PDF-Editor ausblenden', role: 'hide' },
         { label: 'Andere ausblenden', role: 'hideOthers' },
@@ -514,7 +572,7 @@ function buildMenu() {
       { label: 'Bild zu PDF …', click: () => chooseFiles({ append: false, images: true }) },
       { type: 'separator' },
       { label: 'Neuer Tab', accelerator: 'CmdOrCtrl+T', click: docAction('newTab()') },
-      { label: 'Speichern (überschreiben)', accelerator: 'CmdOrCtrl+S', click: docAction("savePDF('overwrite')") },
+      { label: 'Speichern', accelerator: 'CmdOrCtrl+S', click: docAction("savePDF('primary')") },
       { label: 'Als neue Datei speichern', accelerator: 'CmdOrCtrl+Alt+S', click: docAction("savePDF('new')") },
       { label: 'Speichern unter …', accelerator: 'CmdOrCtrl+Shift+S', click: docAction("savePDF('as')") },
       { type: 'separator' },
@@ -531,6 +589,7 @@ function buildMenu() {
       { label: 'Kopieren', role: 'copy' },
       { label: 'Einsetzen', role: 'paste' },
       { label: 'Alles auswählen', role: 'selectAll' },
+      ...(isMac ? [] : [{ type: 'separator' }, { label: 'Einstellungen …', accelerator: 'Ctrl+,', click: docAction('openSettings()') }])
     ]
   });
 
@@ -565,7 +624,12 @@ function buildMenu() {
     });
     template.push({
       label: 'Hilfe',
-      submenu: [{ label: 'Über PDF-Editor', click: aboutDialog }]
+      submenu: [
+        { label: 'Nach Updates suchen …', click: docAction("openSettings('updates',true)") },
+        { label: 'Website öffnen', click: () => shell.openExternal(WEBSITE) },
+        { type: 'separator' },
+        { label: 'Über PDF-Editor', click: aboutDialog }
+      ]
     });
   }
 
@@ -591,6 +655,7 @@ function setupTray() {
       { label: 'PDF öffnen …', click: () => chooseFiles({ append: false, images: false }) },
       { label: 'PDF anhängen …', click: () => chooseFiles({ append: true, images: false }) },
       { type: 'separator' },
+      { label: 'Einstellungen …', click: docAction('openSettings()') },
       { label: 'PDF-Editor beenden', click: () => app.quit() }
     ]));
   } catch (error) {
@@ -623,6 +688,7 @@ if (!gotLock) {
     setupTray();
     const initial = collectPaths(process.argv.slice(1));
     if (initial.length) handleIncoming(initial);
+    if (settings.autoUpdate && app.isPackaged) setTimeout(() => updater.check(), 4000);
   });
 
   app.on('activate', () => {

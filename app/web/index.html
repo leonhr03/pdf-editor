@@ -209,6 +209,123 @@ body.hasdoc:not(.editing) #drop{min-height:calc(100vh - 131px)}
   #drop strong{font-size:16px}
   #pages{padding:20px 8px 84px;gap:20px}
 }
+
+/* ===== Erscheinungsbild ===== */
+:root{--canvas:#e8e8eb;--ghostH:rgba(0,0,0,.055);--ghostA:rgba(0,0,0,.09);--hdr:rgba(251,251,252,.92);--ok:#1f9d55;--warn:#c4410c}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--canvas:#151517;--ghostH:rgba(255,255,255,.07);--ghostA:rgba(255,255,255,.11);--hdr:rgba(36,36,38,.92);--ok:#3ccf7c;--warn:#ff8a4c}}
+:root[data-theme="dark"]{--canvas:#151517;--ghostH:rgba(255,255,255,.07);--ghostA:rgba(255,255,255,.11);--hdr:rgba(36,36,38,.92);--ok:#3ccf7c;--warn:#ff8a4c}
+body{background:var(--canvas);font-size:13px}
+header{background:var(--hdr);backdrop-filter:saturate(1.6) blur(18px);-webkit-backdrop-filter:saturate(1.6) blur(18px)}
+.bar{height:52px;padding:0 14px;gap:10px;-webkit-app-region:drag}
+.bar button,.bar input,.bar select,.bar .savemenu,.bar .zoomval,.bar a{-webkit-app-region:no-drag}
+:root[data-platform="darwin"] .bar{padding-left:86px}
+.logo{width:26px;height:26px;border:0;background:none;border-radius:6px}
+.logo img{width:26px;height:26px;display:block;border-radius:6px}
+h1{font-size:13px;font-weight:650;letter-spacing:-.01em}
+#docname{font-size:11px;max-width:340px}
+.actions{gap:4px}
+.actions>.btn,.actions>button:not(.pri){height:30px;padding:0 9px;border-color:transparent;background:transparent;box-shadow:none;color:var(--tx)}
+.actions>.btn:hover,.actions>button:not(.pri):hover{background:var(--ghostH);border-color:transparent}
+.actions>.btn:active{background:var(--ghostA)}
+.actions .group{padding:2px;border-radius:8px;background:var(--surf2);gap:0}
+.actions .group button{height:26px;border:0;background:transparent;box-shadow:none;border-radius:6px!important;margin:0;padding:0 7px}
+.actions .group button:not(:disabled):hover{background:var(--surf)}
+.actions .group .zoomval{height:26px;border:0;background:transparent;margin:0;min-width:48px}
+.actions .savewrap .group{padding:0;background:none}
+.actions .savewrap .group button.pri{background:var(--ac);color:#fff}
+.actions .savewrap .group button.pri:not(:disabled):hover{background:#0a6fe6}
+.actions .savewrap .group button.pri:disabled{background:var(--surf2);color:var(--mut)}
+.actions .savewrap .group button{height:30px;border-radius:0!important}
+.actions .savewrap .group button:first-child{border-radius:8px 0 0 8px!important;padding:0 12px;font-weight:600}
+.actions .savewrap .group button:last-child{border-radius:0 8px 8px 0!important;padding:0 7px}
+.actions .savewrap .group button.pri+button.pri{border-left:1px solid rgba(255,255,255,.28)}
+.actions .sep{width:1px;height:20px;background:var(--bd);margin:0 4px}
+#setB{width:30px;padding:0;position:relative;-webkit-app-region:no-drag}
+#setB.dot::after{content:"";position:absolute;top:5px;right:5px;width:7px;height:7px;border-radius:50%;background:var(--ac);box-shadow:0 0 0 2px var(--hdr)}
+body:not(.hasdoc) .actions{display:flex}
+body:not(.hasdoc) .actions>:not(#setB){display:none}
+.toolsbar{justify-content:center;position:relative;padding:7px 14px;background:var(--hdr);gap:12px}
+#tools{padding:3px;border-radius:9px;border:0;background:var(--surf2)}
+#tools button{height:28px;padding:0 10px;border-radius:7px;font-size:12px}
+#tools button.on{box-shadow:0 1px 3px rgba(0,0,0,.12),0 0 0 .5px rgba(0,0,0,.04)}
+.props{position:absolute;right:14px;top:50%;transform:translateY(-50%);margin:0}
+.tabrow{background:var(--chrome2);height:38px}
+.tab{height:28px;border-radius:7px;border-color:transparent;font-size:12px}
+.tab.on{border-color:var(--bd);box-shadow:0 1px 2px rgba(0,0,0,.06)}
+#pages{padding:28px 16px 96px;gap:30px}
+.pg{border:0;border-radius:3px;box-shadow:0 0 0 .5px rgba(0,0,0,.18),0 2px 6px rgba(0,0,0,.08),0 12px 32px -12px rgba(0,0,0,.28)}
+.ph{font-size:11.5px}
+#msg{height:26px;padding:0 14px;font-size:11px;background:var(--hdr);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+@media (max-width:1000px){.props{position:static;transform:none;margin-left:auto}.toolsbar{justify-content:flex-start}}
+
+/* Startbildschirm */
+#drop{max-width:720px}
+.welcome-icon{width:84px;height:84px;margin:0 auto 18px;filter:drop-shadow(0 10px 22px rgba(0,0,0,.18))}
+#drop strong{font-size:24px;font-weight:700;letter-spacing:-.022em}
+#drop>p{font-size:13px;max-width:420px}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;width:100%;max-width:560px;margin-top:28px}
+.cards button{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:12px;row-gap:2px;align-items:center;justify-items:start;height:auto;padding:14px 16px;text-align:left;white-space:normal;border-radius:12px;background:var(--surf);border:1px solid var(--bd);box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.cards button:hover{border-color:var(--acBdr);background:var(--surf);box-shadow:0 0 0 3px var(--acTint)}
+.cards .ci{grid-row:1/3;width:36px;height:36px;border-radius:9px;display:grid;place-items:center;background:var(--acTint);color:var(--ac)}
+.cards .ci .ic{width:18px;height:18px}
+.cards b{font-size:13px;font-weight:600}
+.cards span{font-size:11.5px;color:var(--mut);font-weight:400}
+@media (max-width:620px){.cards{grid-template-columns:1fr}}
+
+/* Einstellungen */
+#setDlg{width:min(720px,calc(100vw - 32px));height:min(500px,calc(100vh - 60px));padding:0;border:1px solid var(--bd);border-radius:14px;background:var(--chrome);color:var(--tx);box-shadow:0 30px 80px -20px rgba(0,0,0,.45);overflow:hidden}
+#setDlg::backdrop{background:rgba(0,0,0,.28);backdrop-filter:blur(2px)}
+#setDlg[open]{display:grid;grid-template-columns:190px 1fr}
+.snav{display:flex;flex-direction:column;gap:2px;padding:16px 10px;background:var(--chrome2);border-right:1px solid var(--bd)}
+.snav h2{margin:2px 8px 12px;font-size:15px;font-weight:700;letter-spacing:-.01em}
+.snav button{justify-content:flex-start;gap:9px;height:32px;padding:0 10px;border:0;background:transparent;box-shadow:none;border-radius:7px;font-weight:500;color:var(--tx)}
+.snav button:hover{background:var(--ghostH)}
+.snav button.on{background:var(--acTint);color:var(--ac)}
+.snav button .ic{width:16px;height:16px}
+.snav .badge{margin-left:auto;width:7px;height:7px;border-radius:50%;background:var(--ac)}
+.spane{display:none;flex-direction:column;min-height:0;overflow:auto;padding:22px 26px}
+.spane.on{display:flex}
+.spane h3{margin:0 0 4px;font-size:17px;font-weight:700;letter-spacing:-.015em}
+.spane>p.sub{margin:0 0 18px;color:var(--mut);font-size:12px}
+.srow{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:13px 0;border-top:1px solid var(--bd)}
+.srow:last-of-type{border-bottom:1px solid var(--bd)}
+.srow label,.srow .lbl{font-weight:600;font-size:12.5px}
+.srow small{display:block;margin-top:2px;font-weight:400;font-size:11.5px;color:var(--mut);max-width:330px}
+.seg{display:inline-flex;padding:2px;border-radius:8px;background:var(--surf2);gap:2px}
+.seg button{height:26px;padding:0 12px;border:0;background:transparent;box-shadow:none;border-radius:6px;font-weight:500;color:var(--mut)}
+.seg button.on{background:var(--surf);color:var(--tx);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.switch{position:relative;width:38px;height:22px;flex:none;-webkit-appearance:none;appearance:none;margin:0;border-radius:11px;background:var(--bd2);cursor:pointer;transition:background .15s}
+.switch::after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .15s}
+.switch:checked{background:var(--ac)}
+.switch:checked::after{transform:translateX(16px)}
+.sclose{position:absolute;top:12px;right:12px;width:28px;height:28px;padding:0;border:0;background:transparent;box-shadow:none;border-radius:7px;color:var(--mut);font-size:18px}
+.sclose:hover{background:var(--ghostH);color:var(--tx)}
+.ucard{display:flex;align-items:center;gap:16px;padding:16px;border:1px solid var(--bd);border-radius:12px;background:var(--surf)}
+.ucard img{width:56px;height:56px}
+.ucard b{display:block;font-size:14px}
+.ucard .uv{color:var(--mut);font-size:12px;margin-top:2px}
+.ustate{margin-top:14px;padding:12px 14px;border-radius:10px;background:var(--surf2);font-size:12.5px;line-height:1.45}
+.ustate.ok{color:var(--ok)}
+.ustate.err{color:var(--warn)}
+.ustate.new{background:var(--acTint);color:var(--tx)}
+.uprog{height:6px;margin-top:10px;border-radius:3px;background:var(--bd);overflow:hidden}
+.uprog i{display:block;height:100%;width:0;background:var(--ac);border-radius:3px;transition:width .15s}
+.uactions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.uactions button{height:32px;padding:0 14px}
+.about{display:flex;flex-direction:column;align-items:center;text-align:center;margin:auto 0;gap:4px}
+.about img{width:96px;height:96px;margin-bottom:10px;filter:drop-shadow(0 10px 22px rgba(0,0,0,.18))}
+.about b{font-size:20px;letter-spacing:-.02em}
+.about .uv{color:var(--mut)}
+.about p{margin:10px 0 14px;max-width:340px;color:var(--mut);font-size:12px}
+@media (max-width:600px){#setDlg[open]{grid-template-columns:1fr;grid-template-rows:auto 1fr}.snav{flex-direction:row;overflow-x:auto;border-right:0;border-bottom:1px solid var(--bd)}.snav h2{display:none}}
+
+/* Update-Hinweis */
+#updToast{position:fixed;right:16px;bottom:40px;z-index:80;display:none;align-items:center;gap:12px;max-width:calc(100vw - 32px);padding:12px 12px 12px 14px;border:1px solid var(--bd);border-radius:12px;background:var(--surf);box-shadow:var(--sh),0 12px 40px -12px rgba(0,0,0,.35)}
+#updToast.on{display:flex}
+#updToast img{width:34px;height:34px}
+#updToast b{display:block;font-size:12.5px}
+#updToast span{font-size:11.5px;color:var(--mut)}
+#updToast button{height:28px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -216,7 +333,7 @@ body.hasdoc:not(.editing) #drop{min-height:calc(100vh - 131px)}
 <header>
 <div class="bar">
   <div class="brand">
-    <div class="logo" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3.8 1.8h5.4l3 3v9.4H3.8z"/><path d="M9.2 1.8v3h3"/></svg></div>
+    <div class="logo" aria-hidden="true"><img src="assets/app-icon.png" alt=""></div>
     <div class="titles">
       <h1>PDF-Editor</h1>
       <div id="docname">Kein Dokument geöffnet</div>
@@ -237,6 +354,7 @@ body.hasdoc:not(.editing) #drop{min-height:calc(100vh - 131px)}
     </button>
     <input id="f1" type="file" accept="application/pdf" hidden>
     <input id="f2" type="file" accept="application/pdf" hidden>
+    <span class="sep" aria-hidden="true"></span>
     <div class="group" role="group" aria-label="Verlauf">
       <button id="undo" disabled title="Rückgängig (⌘Z)" aria-label="Rückgängig"><svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.2 4.2 3 7.4l3.2 3.2"/><path d="M3.3 7.4h6.2a3.4 3.4 0 0 1 0 6.8H7.6"/></svg></button>
       <button id="redo" disabled title="Wiederholen (⇧⌘Z)" aria-label="Wiederholen"><svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.8 4.2 13 7.4l-3.2 3.2"/><path d="M12.7 7.4H6.5a3.4 3.4 0 0 0 0 6.8h1.9"/></svg></button>
@@ -260,6 +378,7 @@ body.hasdoc:not(.editing) #drop{min-height:calc(100vh - 131px)}
       <button type="button" role="menuitem" data-save="as"><b>Speichern unter …</b><span>Ort und Dateinamen selbst wählen</span><kbd>⇧⌘S</kbd></button>
     </div>
     </div>
+    <button id="setB" class="btn" title="Einstellungen (⌘,)" aria-label="Einstellungen"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></button>
   </div>
 </div>
 <div class="toolsbar">
@@ -288,18 +407,57 @@ body.hasdoc:not(.editing) #drop{min-height:calc(100vh - 131px)}
 <div class="tabrow"><div id="tabsbar" role="tablist" aria-label="Geöffnete Dokumente"></div></div>
 </header>
 <div id="drop">
-  <div class="dropicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2.5h8l4 4v15H6z"/><path d="M14 2.5v4h4"/><path d="M12 9.5v6"/><path d="M9.4 12.9 12 15.5l2.6-2.6"/></svg></div>
-  <strong>PDF bearbeiten</strong>
-  <p>Datei hierher ziehen oder auswählen – ausfüllen, unterschreiben, markieren und Seiten verwalten.</p>
-  <div class="dropactions">
-    <button id="dropOpen" class="pri big"><svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.8 3.2h3.9l1.4 1.9h6.1a1 1 0 0 1 1 1v6.4a1 1 0 0 1-1 1H2.8a1 1 0 0 1-1-1z"/></svg>PDF öffnen</button>
-    <button id="newBlank" class="big"><svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 1.8h4.7l2.9 2.9v9.5H4z"/><path d="M8.7 1.8v2.9h2.9"/></svg>Leere PDF</button>
-    <button id="newLined" class="big"><svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 2.5h10v11H3z"/><path d="M5 5.4h6M5 8h6M5 10.6h6"/></svg>Liniertes Blatt</button>
-    <button id="imgPdf" class="big"><svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.2" y="3.2" width="11.6" height="9.6" rx="1.5"/><circle cx="5.8" cy="6.3" r="1.1"/><path d="M3.2 11.2 6.6 7.8l2.2 2.2 1.8-1.8 2 2"/></svg>Bild zu PDF</button>
+  <img class="welcome-icon" src="assets/app-icon.png" alt="">
+  <strong>PDF-Editor</strong>
+  <p>Formulare ausfüllen, unterschreiben, markieren und Seiten verwalten. Zieh eine Datei hierher oder wähle unten aus.</p>
+  <div class="cards">
+    <button id="dropOpen"><span class="ci"><svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.8 3.2h3.9l1.4 1.9h6.1a1 1 0 0 1 1 1v6.4a1 1 0 0 1-1 1H2.8a1 1 0 0 1-1-1z"/></svg></span><b>PDF öffnen</b><span>Vorhandenes Dokument bearbeiten</span></button>
+    <button id="newBlank"><span class="ci"><svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 1.8h4.7l2.9 2.9v9.5H4z"/><path d="M8.7 1.8v2.9h2.9"/><path d="M7.8 7.6v4M5.8 9.6h4"/></svg></span><b>Leere PDF</b><span>Neue A4-Seite zum Beschreiben</span></button>
+    <button id="newLined"><span class="ci"><svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 2.5h10v11H3z"/><path d="M5 5.4h6M5 8h6M5 10.6h6"/></svg></span><b>Liniertes Blatt</b><span>A4 mit Schreiblinien</span></button>
+    <button id="imgPdf"><span class="ci"><svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.2" y="3.2" width="11.6" height="9.6" rx="1.5"/><circle cx="5.6" cy="6.4" r="1.1"/><path d="m2.6 11.6 3.3-3.1 2.4 2.2 1.7-1.5 3.4 2.8"/></svg></span><b>Bild zu PDF</b><span>Fotos und Scans umwandeln</span></button>
   </div>
-  <p class="hint">oder <span class="kbd">⌘O</span> drücken</p>
+  <p class="hint">PDF hierher ziehen oder <span class="kbd">⌘O</span> drücken</p>
 </div>
 <div id="pages" class="t-sel"></div>
+<dialog id="setDlg" aria-label="Einstellungen">
+  <nav class="snav">
+    <h2>Einstellungen</h2>
+    <button data-pane="general" class="on"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>Allgemein</button>
+    <button data-pane="edit"><svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3.5 12.5.8-3 6.6-6.6 2.2 2.2-6.6 6.6z"/><path d="m9.6 4.2 2.2 2.2"/></svg>Bearbeiten</button>
+    <button data-pane="updates"><svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.2 8a5.2 5.2 0 1 1-1.6-3.8"/><path d="M13.4 2.6v2.8h-2.8"/></svg>Updates<span class="badge" id="updBadge" hidden></span></button>
+    <button data-pane="about"><svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M8 7.2v3.6M8 5.2v.1"/></svg>Über</button>
+  </nav>
+  <section class="spane on" data-pane="general">
+    <h3>Allgemein</h3><p class="sub">Aussehen und Verhalten der App.</p>
+    <div class="srow"><div><span class="lbl">Erscheinungsbild</span><small>Hell, dunkel oder wie das System.</small></div>
+      <div class="seg" id="setTheme" role="radiogroup"><button data-v="system" role="radio">System</button><button data-v="light" role="radio">Hell</button><button data-v="dark" role="radio">Dunkel</button></div></div>
+    <div class="srow"><div><label for="setSave">Speichern-Knopf und ⌘S</label><small>Was beim normalen Speichern passiert. Die anderen Varianten findest du immer im Pfeil-Menü.</small></div>
+      <select id="setSave"><option value="overwrite">Datei überschreiben</option><option value="as">Immer „Speichern unter“</option></select></div>
+  </section>
+  <section class="spane" data-pane="edit">
+    <h3>Bearbeiten</h3><p class="sub">Standardwerte für neue Texte und Textfelder.</p>
+    <div class="srow"><div><label for="setSize">Schriftgröße</label><small>Gilt für das Text- und das Textfeld-Werkzeug.</small></div>
+      <select id="setSize"><option value="9">9 pt</option><option value="10">10 pt</option><option value="11">11 pt</option><option value="12">12 pt</option><option value="14">14 pt</option><option value="18">18 pt</option><option value="24">24 pt</option></select></div>
+    <div class="srow"><div><label for="setColor">Textfarbe</label><small>Farbe, mit der neue Texte starten.</small></div>
+      <input type="color" id="setColor" value="#111111"></div>
+  </section>
+  <section class="spane" data-pane="updates">
+    <h3>Updates</h3><p class="sub">Neue Versionen kommen direkt von der PDF-Editor-Website.</p>
+    <div class="ucard"><img src="assets/app-icon.png" alt=""><div><b>PDF-Editor</b><div class="uv">Installierte Version <span id="verNow">–</span></div></div></div>
+    <div class="ustate" id="updState">Noch nicht geprüft.</div>
+    <div class="uprog" id="updProg" hidden><i></i></div>
+    <div class="uactions"><button id="updCheck">Nach Updates suchen</button><button id="updGo" class="pri" hidden>Jetzt aktualisieren</button></div>
+    <div class="srow" style="margin-top:18px"><div><label for="setAuto">Automatisch nach Updates suchen</label><small>Beim Start der App kurz auf der Website nachsehen.</small></div>
+      <input type="checkbox" class="switch" id="setAuto"></div>
+  </section>
+  <section class="spane" data-pane="about">
+    <div class="about"><img src="assets/app-icon.png" alt=""><b>PDF-Editor</b><div class="uv">Version <span id="verAbout">–</span></div>
+      <p>PDFs ausfüllen, unterschreiben, markieren und verwalten. Alles bleibt lokal auf deinem Rechner.</p>
+      <button id="openSite">Website öffnen</button></div>
+  </section>
+  <button class="sclose" id="setClose" aria-label="Einstellungen schließen">×</button>
+</dialog>
+<div id="updToast" role="status"><img src="assets/app-icon.png" alt=""><div><b id="updToastT">Update verfügbar</b><span>Neue Version auf der Website.</span></div><button id="updLater">Später</button><button id="updShow" class="pri">Ansehen</button></div>
 <div id="msg" role="status" aria-live="polite"></div>
 
 <script src="assets/pdf.min.js"></script>
@@ -924,7 +1082,7 @@ document.addEventListener("keydown",e=>{
  const typing=/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName),mod=e.ctrlKey||e.metaKey;
   if(e.key==="Escape"){sel=null;markSel();setTool("sel")}
   if(e.ctrlKey&&e.key==="Tab"){e.preventDefault();switchTab((tabIx+(e.shiftKey?-1:1)+tabs.length)%tabs.length);return}
-  if(mod&&e.key.toLowerCase()==="s"){e.preventDefault();if(!$("saveB").disabled)savePDF(e.shiftKey?"as":"overwrite");return}
+  if(mod&&e.key.toLowerCase()==="s"){e.preventDefault();if(!$("saveB").disabled)savePDF(e.shiftKey?"as":"primary");return}
  if(mod&&e.key.toLowerCase()==="o"){e.preventDefault();pickPDF(false);return}
  if(mod&&e.key.toLowerCase()==="n"){e.preventDefault();newDocument(false);return}
  if(mod&&(e.key==="+"||e.key==="=")){e.preventDefault();zoom(1.2);return}
@@ -1012,6 +1170,7 @@ function applyFormValues(form){
 }
 async function savePDF(mode){
  closeSaveMenu();
+ if(mode==="primary")mode=appSettings.saveShortcut==="as"?"as":"overwrite";
  if(!pages.length)return;
  try{
   msg("Erzeuge PDF …");
@@ -1053,7 +1212,7 @@ function toggleSaveMenu(){
  m.hidden=!open;$("saveMore").setAttribute("aria-expanded",String(open));
  if(open)m.querySelector("button").focus();
 }
-$("saveB").onclick=()=>savePDF("overwrite");
+$("saveB").onclick=()=>savePDF("primary");
 $("saveMore").onclick=e=>{e.stopPropagation();toggleSaveMenu()};
 $("saveMenu").onclick=e=>{const b=e.target.closest("[data-save]");if(b)savePDF(b.dataset.save)};
 $("saveMenu").onkeydown=e=>{
@@ -1063,6 +1222,100 @@ $("saveMenu").onkeydown=e=>{
  else if(e.key==="Escape"){e.stopPropagation();closeSaveMenu();$("saveMore").focus()}
 };
 document.addEventListener("pointerdown",e=>{if(!e.target.closest(".savewrap"))closeSaveMenu()});
+
+/* Einstellungen & Updates */
+let appSettings={theme:"system",autoUpdate:true,saveShortcut:"overwrite",fontSize:11,textColor:"#111111"};
+const api=window.pdfApp||null;
+if(api&&api.platform)document.documentElement.dataset.platform=api.platform;
+function applySettings(){
+ document.querySelectorAll("#setTheme button").forEach(b=>b.classList.toggle("on",b.dataset.v===appSettings.theme));
+ document.querySelectorAll("#setTheme button").forEach(b=>b.setAttribute("aria-checked",String(b.dataset.v===appSettings.theme)));
+ $("setSave").value=appSettings.saveShortcut;
+ $("setSize").value=String(appSettings.fontSize);
+ $("setColor").value=appSettings.textColor;
+ $("setAuto").checked=!!appSettings.autoUpdate;
+ $("saveB").title=appSettings.saveShortcut==="as"?"Speichern unter (⌘S)":"Speichern (⌘S) – überschreibt die geöffnete Datei";
+}
+async function saveSetting(patch){
+ Object.assign(appSettings,patch);applySettings();
+ if(api)try{Object.assign(appSettings,await api.setSettings(patch))}catch(e){}
+}
+function useDefaults(){
+ const sz=String(appSettings.fontSize);
+ if(![...$("sz").options].some(o=>o.value===sz)){const o=document.createElement("option");o.value=sz;o.textContent="Schrift "+sz;$("sz").appendChild(o)}
+ $("sz").value=sz;$("col").value=appSettings.textColor;
+}
+$("setTheme").onclick=e=>{const b=e.target.closest("[data-v]");if(b)saveSetting({theme:b.dataset.v})};
+$("setSave").onchange=e=>saveSetting({saveShortcut:e.target.value});
+$("setSize").onchange=e=>{saveSetting({fontSize:+e.target.value});useDefaults()};
+$("setColor").onchange=e=>{saveSetting({textColor:e.target.value});useDefaults()};
+$("setAuto").onchange=e=>saveSetting({autoUpdate:e.target.checked});
+
+function showPane(name){
+ document.querySelectorAll(".snav [data-pane]").forEach(b=>b.classList.toggle("on",b.dataset.pane===name));
+ document.querySelectorAll(".spane").forEach(s=>s.classList.toggle("on",s.dataset.pane===name));
+}
+function openSettings(pane,check){
+ const d=$("setDlg");if(!d.open)d.showModal();
+ showPane(pane||"general");
+ if(check)runUpdateCheck();
+}
+$("setB").onclick=()=>openSettings();
+$("setClose").onclick=()=>$("setDlg").close();
+$("setDlg").addEventListener("click",e=>{if(e.target===$("setDlg"))$("setDlg").close()});
+document.querySelector(".snav").onclick=e=>{const b=e.target.closest("[data-pane]");if(b)showPane(b.dataset.pane)};
+$("openSite").onclick=()=>api&&api.openWebsite();
+
+const fmtMB=b=>b?Math.round(b/1e6)+" MB":"";
+let updState={phase:"idle"};
+function renderUpdate(s){
+ updState=s||updState;const st=updState,box=$("updState"),prog=$("updProg"),go=$("updGo"),chk=$("updCheck");
+ box.className="ustate";prog.hidden=true;go.hidden=true;chk.disabled=false;go.disabled=false;
+ const avail=st.phase==="available"||st.phase==="ready";
+ $("setB").classList.toggle("dot",avail);$("updBadge").hidden=!avail;
+ switch(st.phase){
+  case "checking":box.textContent="Suche nach Updates …";chk.disabled=true;break;
+  case "current":box.className="ustate ok";box.textContent="Du hast die neueste Version ("+st.current+").";break;
+  case "available":box.className="ustate new";box.innerHTML="";box.append(Object.assign(document.createElement("b"),{textContent:"Version "+st.latest+" ist verfügbar."}),document.createTextNode(" Das Update wird heruntergeladen, installiert und die App danach neu gestartet."));
+   go.hidden=false;go.textContent="Jetzt aktualisieren"+(st.size?" ("+fmtMB(st.size)+")":"");break;
+  case "downloading":box.className="ustate new";box.textContent="Lade Version "+st.latest+" herunter … "+Math.round((st.progress||0)*100)+" %";prog.hidden=false;prog.firstElementChild.style.width=Math.round((st.progress||0)*100)+"%";chk.disabled=true;break;
+  case "ready":box.className="ustate new";box.textContent="Version "+st.latest+" ist heruntergeladen.";go.hidden=false;go.textContent="Neu starten und installieren";break;
+  case "installing":box.className="ustate new";box.textContent="Installiere … die App startet gleich neu.";chk.disabled=true;break;
+  case "manual":box.className="ustate new";box.textContent="Version "+st.latest+" ist verfügbar, aber nicht für dieses System als automatisches Update. Lade sie auf der Website herunter.";go.hidden=false;go.textContent="Website öffnen";break;
+  case "manual-install":box.className="ustate new";box.textContent="Das Update wurde geöffnet. Folge den Anweisungen, um die Installation abzuschließen.";break;
+  case "error":box.className="ustate err";box.textContent=st.error||"Unbekannter Fehler.";break;
+  default:box.textContent="Noch nicht geprüft.";
+ }
+ if(st.phase==="available"&&!$("setDlg").open&&!sessionStorage.getItem("updLater"+st.latest)){
+  $("updToastT").textContent="Version "+st.latest+" ist verfügbar";$("updToast").classList.add("on");
+ }
+ if(st.phase!=="available")$("updToast").classList.remove("on");
+}
+async function runUpdateCheck(){if(!api){renderUpdate({phase:"error",error:"Updates gibt es nur in der Desktop-App."});return}renderUpdate(await api.checkUpdate())}
+$("updCheck").onclick=runUpdateCheck;
+$("updGo").onclick=async()=>{
+ if(!api)return;
+ if(updState.phase==="manual"){api.openWebsite();return}
+ $("updGo").disabled=true;
+ let s=updState;
+ if(s.phase==="available")s=await api.downloadUpdate();
+ if(s&&s.phase==="ready")s=await api.installUpdate();
+ renderUpdate(s);
+};
+$("updLater").onclick=()=>{try{sessionStorage.setItem("updLater"+updState.latest,"1")}catch(e){}$("updToast").classList.remove("on")};
+$("updShow").onclick=()=>{$("updToast").classList.remove("on");openSettings("updates")};
+
+(async()=>{
+ if(!api){applySettings();useDefaults();return}
+ try{
+  const s=await api.getSettings();
+  Object.assign(appSettings,s);
+  $("verNow").textContent=$("verAbout").textContent=s.version;
+  applySettings();useDefaults();
+  if(s.update)renderUpdate(s.update);
+ }catch(e){applySettings();useDefaults()}
+ api.onUpdate(renderUpdate);
+})();
 syncProps();updateTabs();
 </script>
 </body>

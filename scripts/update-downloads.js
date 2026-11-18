@@ -5,6 +5,7 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 const [version, dir] = process.argv.slice(2);
 if (!version || !dir) {
@@ -35,6 +36,7 @@ for (const [key, e] of Object.entries(entries)) {
     label: e.label,
     file: 'downloads/' + e.name,
     size: fs.statSync(file).size,
+    sha256: crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex'),
     url: base + e.name
   };
 }
